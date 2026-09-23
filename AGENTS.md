@@ -21,7 +21,7 @@ tests/bootstrap/lib/        Unit tests for library functions.
 
 ### Profiles and stages
 
-There are nine **profiles**: `base`, `desktop`, `keyboard`, `apps`, `tools`, `ctf`, `secrets`, `llm`, `theme`. Each **stage** declares which profiles it belongs to via a `stage_profiles` array. The runner discovers all `bootstrap/stages/*.sh` files alphabetically, matches them against selected profiles, and executes them in order. The `keyboard` profile is separate from `desktop` — it covers system-level/low-level keyboard configuration (e.g. Kanata), not desktop-environment-specific keybindings. The `ctf` profile is for platform-specific CTF tooling that is not part of the general `tools` profile. The `theme` profile is independent from `desktop` — it overlays color schemes on top of already-deployed desktop configs.
+There are ten **profiles**: `base`, `desktop`, `keyboard`, `network`, `apps`, `tools`, `ctf`, `secrets`, `llm`, `theme`. Each **stage** declares which profiles it belongs to via a `stage_profiles` array. The runner discovers all `bootstrap/stages/*.sh` files alphabetically, matches them against selected profiles, and executes them in order. The `keyboard` profile is separate from `desktop` — it covers system-level/low-level keyboard configuration (e.g. Kanata), not desktop-environment-specific keybindings. The `network` profile covers system-level drivers and hardware configuration for network adapters (e.g. the RTL8192EU USB WiFi driver). The `ctf` profile is for platform-specific CTF tooling that is not part of the general `tools` profile. The `theme` profile is independent from `desktop` — it overlays color schemes on top of already-deployed desktop configs.
 
 Stage `21-bootstrap-user-cleanup` has no profile — it only runs when explicitly requested via `--stage bootstrap-user-cleanup`.
 
@@ -99,7 +99,11 @@ These are set by `cli.sh` and used throughout:
 
 ### Keyboard vs Desktop profile boundary
 
-The `keyboard` profile covers system-level/low-level keyboard configuration (Kanata, key remapping, input device setup). Desktop-environment-specific keybindings (i3 bindsym, Hyprland binds) belong in `desktop`. When adding new keyboard-related stages, use the `keyboard` profile and the 29 numbering range. The `apps` profile covers optional application installs (note-taking, communication).
+The `keyboard` profile covers system-level/low-level keyboard configuration (Kanata, key remapping, input device setup). Desktop-environment-specific keybindings (i3 bindsym, Hyprland binds) belong in `desktop`. When adding new keyboard-related stages, use the `keyboard` profile and the 29 numbering range. The `apps` profile covers optional application installs (note-taking).
+
+### Network profile
+
+The `network` profile covers low-level network adapter drivers and hardware configuration, mirroring the `keyboard` profile pattern. Driver stages use the 24 numbering range (e.g., `24-network-rtl8192eu.sh`). Kernel module builds use DKMS so the module survives kernel upgrades, and static disablement configs (e.g., `/etc/modprobe.d/*.conf`) are deployed from `bootstrap/files/modprobe.d/`. Dynamic dependencies (e.g., `linux-headers-$(uname -r)`) are installed inline with `apt-get install -y --no-install-recommends`; static build deps go in `files/packages/network-apt.txt`.
 
 ### Theme profile
 
@@ -209,4 +213,3 @@ These are flagged in the registry and logged as warnings by stage `52-tools-priv
 | **Neo4j** | Server usage metrics posture needs review |
 | **Proxychains4** | Posture not explicitly documented |
 | **Remmina** | Posture needs review |
-| **Thunderbird** | Mozilla update/telemetry posture needs review |

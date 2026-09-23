@@ -25,7 +25,8 @@ Profiles group stages by purpose. Select one or more at runtime.
 | **base** | Bootstrap prerequisites (jq, gum, git, etc.) and target user creation |
 | **desktop** | i3 window manager, Rofi, Alacritty, tmux, Firefox, qutebrowser, common software |
 | **keyboard** | Kanata keyboard remapper with systemd service, udev rules, optional enthium layout |
-| **apps** | Optional application installs — note-taking (Obsidian, Joplin, CherryTree) and communication (Discord, Telegram, Signal, Element) |
+| **network** | RTL8192EU USB WiFi driver (TP-Link TL-WN821N) built via DKMS with conflicting driver blacklist |
+| **apps** | Optional application installs — note-taking (Obsidian) |
 | **tools** | 60+ security packages, language runtimes, mise, external repos (Netbird, Tailscale), telemetry opt-outs |
 | **ctf** | Platform-specific CTF tooling (HTB toolkit) |
 | **secrets** | SSH directory and KeePassXC database import with permission enforcement |
@@ -41,13 +42,13 @@ Each stage declares which profiles it belongs to, a `stage_apply` function, and 
 | `10-system-base` | base | Install jq, gum, sudo, curl, git, shellcheck |
 | `20-user-migration` | base | Create target user (UID > 10000), assign groups |
 | `21-bootstrap-user-cleanup` | *(explicit only)* | Remove the bootstrap user — requires `--stage` flag |
+| `24-network-rtl8192eu` | network | RTL8192EU WiFi driver (TP-Link TL-WN821N) via DKMS + rtl8xxxu blacklist |
 | `25-desktop-i3` | desktop | Deploy i3 config with named workspaces, hjkl bindings, autotiling |
 | `26-desktop-apps` | desktop | Rofi, Alacritty, tmux, zsh, shell configs, i3status-rs, update manifest |
 | `27-desktop-neovim` | desktop | Neovim + LazyVim starter |
-| `28-desktop-common-software` | desktop | Audacity, GIMP, Thunderbird, Podman, Grayjay |
+| `28-desktop-common-software` | desktop | Audacity, GIMP, Podman, LocalSend |
 | `29-keyboard-kanata` | keyboard | Kanata keyboard remapper with systemd service + udev rules |
-| `30-note-taking` | apps | Obsidian, Joplin, CherryTree (multi-select) |
-| `31-communication` | apps | Discord, Vesktop, Telegram, Element, Signal (multi-select) |
+| `30-note-taking` | apps | Obsidian (multi-select) |
 | `32-browser-firefox` | desktop | Firefox profiles (operator + regular), addons, SecurityBookmarks, enterprise policy |
 | `33-browser-qutebrowser` | desktop | qutebrowser via PyPI (mise Python), adblock, system wrapper |
 | `40-repos-external` | tools | Mise runtime manager, global node/python, Netbird, Tailscale |
@@ -64,7 +65,7 @@ Each stage declares which profiles it belongs to, a `stage_apply` function, and 
 The centralized update manager (`~/.config/i3/scripts/update-manager.sh`) handles:
 
 1. **APT packages** — `apt update && apt upgrade`
-2. **Flatpak apps** — Discord, Vesktop, Telegram, Grayjay, etc.
+2. **Flatpak apps** — KeePassXC, LocalSend, etc.
 3. **Manifest-tracked tools** — Queries GitHub API for latest releases of opengrep, Tailscale
 
 The update manifest lives at `~/.config/kalidots/update-manifest.json`. Each tool-installing stage registers its version there.
@@ -77,7 +78,7 @@ Access via the Kali menu (Super+Alt+Space > Update) or the i3 keybinding.
 sudo ./bootstrap/bin/kali-bootstrap [OPTIONS]
 
 Options:
-  --profile PROFILE       Profile to activate (repeatable: base, desktop, keyboard, apps, tools, ctf, llm, secrets, theme)
+  --profile PROFILE       Profile to activate (repeatable: base, desktop, keyboard, network, apps, tools, ctf, llm, secrets, theme)
   --stage STAGE_ID        Run specific stage(s) by ID, overrides profile matching (repeatable)
   --state-file PATH       Custom state file path (default: .bootstrap/state.json)
   --yes                   Skip confirmation prompts

@@ -1,7 +1,6 @@
 # Desktop common software - general desktop applications
 audacity
 gimp
-thunderbird
 podman
 uidmap
 slirp4netns

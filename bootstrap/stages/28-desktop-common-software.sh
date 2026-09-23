@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2034
 stage_id="desktop-common-software"
-stage_description="Install common desktop applications (audacity, gimp, thunderbird, podman, grayjay)"
+stage_description="Install common desktop applications (audacity, gimp, podman, localsend)"
 stage_profiles=("desktop")
 
 # shellcheck disable=SC1091
@@ -41,11 +41,12 @@ stage_apply() {
   # Rootless podman support
   ensure_subuid_subgid "${TARGET_USER}"
 
-  # Install Grayjay via Flatpak
+  # Install LocalSend via Flatpak
   if command -v flatpak >/dev/null 2>&1; then
-    if ! flatpak list --app 2>/dev/null | grep -q 'app.grayjay.Grayjay'; then
-      log_info "Installing Grayjay via Flatpak"
-      flatpak install -y flathub app.grayjay.Grayjay || log_warn "Grayjay Flatpak install failed; may not be available yet"
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo >/dev/null 2>&1 || true
+    if ! flatpak list --app 2>/dev/null | grep -q 'org.localsend.localsend_app'; then
+      log_info "Installing LocalSend via Flatpak"
+      flatpak install -y flathub org.localsend.localsend_app || log_warn "LocalSend Flatpak install failed"
     fi
   fi
 }
@@ -55,7 +56,6 @@ stage_verify() {
 
   command -v audacity >/dev/null 2>&1 || { log_error "audacity not found"; return 1; }
   command -v gimp >/dev/null 2>&1 || { log_error "gimp not found"; return 1; }
-  command -v thunderbird >/dev/null 2>&1 || { log_error "thunderbird not found"; return 1; }
   command -v podman >/dev/null 2>&1 || { log_error "podman not found"; return 1; }
   grep -q "^${TARGET_USER}:" /etc/subuid || { log_error "subuid not configured for ${TARGET_USER}"; return 1; }
   grep -q "^${TARGET_USER}:" /etc/subgid || { log_error "subgid not configured for ${TARGET_USER}"; return 1; }

@@ -1,0 +1,10 @@
+# RTL8192EU USB WiFi driver — apt manifest for network profile
+# linux-headers-$(uname -r) is versions-specific and installed
+# dynamically inside the stage (cannot be a static manifest entry).
+# One package per line; lines starting with # are comments.
+
+# --- Kernel module build toolchain ---
+dkms
+bc
+build-essential
+git

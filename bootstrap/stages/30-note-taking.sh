@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2034
 stage_id="note-taking"
-stage_description="Install note-taking applications (Obsidian, Joplin, CherryTree)"
+stage_description="Install note-taking applications (Obsidian)"
 stage_profiles=("apps")
 
 # shellcheck disable=SC1091
@@ -35,10 +35,10 @@ stage_apply() {
 
   if command -v gum >/dev/null 2>&1; then
     mapfile -t choices < <(
-      gum choose --no-limit --header "Select note-taking apps to install" "obsidian" "joplin" "cherrytree"
+      gum choose --no-limit --header "Select note-taking apps to install" "obsidian"
     )
   else
-    printf 'Select note-taking apps (comma-separated: obsidian, joplin, cherrytree): ' >&2
+    printf 'Select note-taking apps (comma-separated: obsidian): ' >&2
     local input
     IFS= read -r input
     IFS=',' read -r -a choices <<<"${input}"
@@ -50,8 +50,6 @@ stage_apply() {
     choice="${choice%"${choice##*[![:space:]]}"}"
     case "${choice}" in
       obsidian) install_obsidian "${target_home}" ;;
-      joplin) apt-get install -y joplin ;;
-      cherrytree) apt-get install -y cherrytree ;;
     esac
   done
 }
@@ -60,8 +58,6 @@ stage_verify() {
   # At least one note-taking app should be available
   local found=false
   command -v obsidian >/dev/null 2>&1 && found=true
-  command -v joplin >/dev/null 2>&1 && found=true
-  command -v cherrytree >/dev/null 2>&1 && found=true
 
   if [[ "${found}" != "true" ]]; then
     log_warn "No note-taking applications installed (user may have selected none)"

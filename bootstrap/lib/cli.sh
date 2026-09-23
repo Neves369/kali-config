@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-readonly AVAILABLE_PROFILES=(base desktop keyboard apps tools ctf llm secrets theme)
+readonly AVAILABLE_PROFILES=(base desktop keyboard network apps tools ctf llm secrets theme)
 
 STATE_FILE="${STATE_FILE:-./.bootstrap/state.json}"
 ASSUME_YES="${ASSUME_YES:-false}"
