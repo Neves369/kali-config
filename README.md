@@ -1,6 +1,6 @@
 # kalidots
 
-A modular, resumable bootstrap system for Kali Linux workstations. Installs packages, configures a desktop environment with i3, deploys dotfiles, manages browsers, communication apps, note-taking tools, imports secrets, and sets up LLM tooling — all driven by a profile-based stage runner with built-in state tracking, verification, and a centralized update manager.
+A modular, resumable bootstrap system for Kali Linux workstations. Installs packages, configures a desktop environment with i3, deploys dotfiles, manages browsers and note-taking tools, imports secrets, and sets up LLM tooling — all driven by a profile-based stage runner with built-in state tracking, verification, and a centralized update manager.
 
 ## Quick Start
 
@@ -49,8 +49,8 @@ Each stage declares which profiles it belongs to, a `stage_apply` function, and 
 | `28-desktop-common-software` | desktop | Audacity, GIMP, Podman, LocalSend |
 | `29-keyboard-kanata` | keyboard | Kanata keyboard remapper with systemd service + udev rules |
 | `30-note-taking` | apps | Obsidian (multi-select) |
-| `32-browser-firefox` | desktop | Firefox profiles (operator + regular), addons, SecurityBookmarks, enterprise policy |
-| `33-browser-qutebrowser` | desktop | qutebrowser via PyPI (mise Python), adblock, system wrapper |
+| `53-browser-firefox` | desktop | Firefox profiles (operator + regular), addons, SecurityBookmarks, enterprise policy |
+| `54-browser-qutebrowser` | desktop | qutebrowser via PyPI (mise Python), adblock, system wrapper |
 | `40-repos-external` | tools | Mise runtime manager, global node/python, Netbird, Tailscale |
 | `50-tools-apt` | tools | 60+ security tool packages, reconftw (container), opengrep, rockyou |
 | `51-tools-runtimes` | tools | Rust toolchain, Go tools, pipx, reference repos |
